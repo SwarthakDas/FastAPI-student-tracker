@@ -9,7 +9,7 @@ class registerStudent(BaseModel):
     dob: int
 
 class getStudent(BaseModel):
-    roll:str
+    roll:int
 
 class getStudentRes(BaseModel):
     name: str

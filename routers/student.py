@@ -38,7 +38,7 @@ def get_student(student:getStudent):
     }
 
 @router.post("/get-all",response_model=list[getStudentRes],status_code=status.HTTP_200_OK)
-def get_student(batch_name: str):
+def get_all_students(batch_name: str):
     batch=db["batches"].find_one({"name":batch_name})
     if not batch:
         raise HTTPException(status_code=404,detail="Batch not found")
