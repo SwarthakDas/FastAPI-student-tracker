@@ -1,6 +1,7 @@
-from pydantic_settings import BaseSettings
-from bson import ObjectId
+from pydantic import BaseModel
 
-class Exam(BaseSettings):
+class Exam(BaseModel):
+    code: str
     term: str
-    marks: dict[ObjectId,int]
+    marks: dict[int,int]
+    

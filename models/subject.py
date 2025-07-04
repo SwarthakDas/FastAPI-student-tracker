@@ -1,7 +1,7 @@
-from pydantic_settings import BaseSettings
-from bson import ObjectId
+from pydantic import BaseModel
 
-class Subject(BaseSettings):
+class Subject(BaseModel):
     code: str
+    name: str
     marks: int
-    exams: ObjectId
+    exams: list

@@ -1,8 +1,8 @@
-from pydantic_settings import BaseSettings
+from pydantic import BaseModel
 from bson import ObjectId
 
-class Student(BaseSettings):
+class Student(BaseModel):
     name: str
     roll: int
     dob: int
-    batch: ObjectId
+    batch: str

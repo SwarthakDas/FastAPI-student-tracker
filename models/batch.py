@@ -1,7 +1,6 @@
-from pydantic_settings import BaseSettings
-from bson import ObjectId
+from pydantic import BaseModel,Field
 
-class Batch(BaseSettings):
+class Batch(BaseModel):
     name: str
     strength: int
-    subjects: ObjectId
+    subjects: list = Field(default_factory=list)

@@ -1,10 +1,32 @@
 from pydantic import BaseModel
 
-class registerSubject(BaseModel):
-    pass
+class addSubject(BaseModel):
+    code: str
+    name: str
+    marks: int
+
+class addSubjectRes(BaseModel):
+    message: str
 
 class getSubject(BaseModel):
-    batch:str
+    code:str
+
+class getSubjectRes(BaseModel):
     code: str
+    name:str
     marks: int
-    exams: str | None
+    exams: list|None = None
+
+class updateSubject(BaseModel):
+    code: str
+    name: str | None = None
+    marks: int | None = None
+
+class updateSubjectRes(BaseModel):
+    message: str
+
+class subjectAverageReq(BaseModel):
+    code: str
+
+class subjectAverageRes(BaseModel):
+    average: float | None

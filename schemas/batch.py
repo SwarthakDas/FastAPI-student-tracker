@@ -5,7 +5,6 @@ class registerBatchRes(BaseModel):
 
 class registerBatch(BaseModel):
     name: str
-    strength: int
 
 class getBatch(BaseModel):
     name: str
@@ -13,4 +12,10 @@ class getBatch(BaseModel):
 class getBatchRes(BaseModel):
     name: str
     strength: int
-    subjects: str | None
+    subjects: list | None = None
+
+class BatchExamsReq(BaseModel):
+    name: str
+
+class BatchExamsRes(BaseModel):
+    exams: list[str]
