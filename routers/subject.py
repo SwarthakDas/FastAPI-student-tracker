@@ -88,7 +88,31 @@ def update_subject(payload: updateSubject):
 
 @router.post("/exams", response_model=list[getExamRes], status_code=status.HTTP_200_OK)
 def subject_exams(req: getSubject):
-    return router.dependency_overrides.get
+    subject = db["subjects"].find_one({"code": req.code})
+    if not subject:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Subject not found")
+
+    exam_ids = subject.get("exams", [])
+    if not exam_ids:
+        return []
+
+    exams = list(db["exams"].find({"_id": {"$in": exam_ids}}))
+
+    results = []
+    for ex in exams:
+        student_marks = {}
+        for roll, marks in ex.get("marks", {}).items():
+            student = db["students"].find_one({"roll": roll})
+            name = student["name"] if student else f"Roll {roll}"
+            student_marks[name] = marks
+
+        results.append({
+            "code": ex["code"],
+            "term": ex["term"],
+            "marks": student_marks
+        })
+
+    return results
 
 @router.post("/average", response_model=subjectAverageRes, status_code=status.HTTP_200_OK)
 def subject_average(req: subjectAverageReq):

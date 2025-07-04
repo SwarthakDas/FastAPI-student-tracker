@@ -83,12 +83,6 @@ def update_marks(req: updateMarksReq):
     )
     return {"message": "Marks updated"}
 
-
-@router.post("/students-marks", response_model=getExamRes, status_code=status.HTTP_200_OK)
-def students_marks(req: getExam):
-    return get_exam(req)
-
-
 @router.post("/topper", response_model=topperRes, status_code=status.HTTP_200_OK)
 def exam_topper(req: topperReq):
     ex = db["exams"].find_one({"code": req.code, "term": req.term})
@@ -96,11 +90,10 @@ def exam_topper(req: topperReq):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Exam not found or no marks")
 
     roll, marks = max(ex["marks"].items(), key=lambda x: x[1])
-    roll_int = int(roll)
-    student = db["students"].find_one({"roll": roll_int})
-    name = student["name"] if student else f"Roll {roll_int}"
+    student = db["students"].find_one({"roll": roll})
+    name = student["name"]
 
-    return {"name": name, "roll": roll_int, "marks": marks}
+    return {"name": name, "roll": roll, "marks": marks}
 
 @router.post("/compare", response_model=compareRes, status_code=status.HTTP_200_OK)
 def compare_exams(req: compareReq):
@@ -112,4 +105,3 @@ def compare_exams(req: compareReq):
 
     diff = total2 - total1 if (total1 is not None and total2 is not None) else None
     return {"term1_total": total1, "term2_total": total2, "diff": diff}
-

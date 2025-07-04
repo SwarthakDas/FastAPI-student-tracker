@@ -61,20 +61,20 @@ def get_all_students(batch_name: str):
     ]
 
 @router.patch("/update", response_model=updateStudentRes, status_code=status.HTTP_200_OK)
-def update_student(payload: updateStudent):
-    stu = db["students"].find_one({"roll": payload.roll})
+def update_student(req: updateStudent):
+    stu = db["students"].find_one({"roll": req.roll})
     if not stu:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Student not found")
 
     update_fields = {}
-    if payload.name:
-        update_fields["name"] = payload.name
-    if payload.new_roll:
-        if db["students"].find_one({"roll": payload.new_roll}):
+    if req.name:
+        update_fields["name"] = req.name
+    if req.new_roll:
+        if db["students"].find_one({"roll": req.new_roll}):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Roll already exists")
-        update_fields["roll"] = payload.new_roll
-    if payload.dob:
-        update_fields["dob"] = payload.dob
+        update_fields["roll"] = req.new_roll
+    if req.dob:
+        update_fields["dob"] = req.dob
 
     if update_fields:
         db["students"].update_one({"_id": stu["_id"]}, {"$set": update_fields})
@@ -110,8 +110,7 @@ def student_rank(req: studentRankReq):
     totals: dict[int, int] = {s["roll"]: 0 for s in students}
     exams = db["exams"].find({"marks": {"$ne": {}}})
     for ex in exams:
-        for roll_str, mark in ex["marks"].items():
-            roll = int(roll_str)
+        for roll, mark in ex["marks"].items():
             if roll in totals:
                 totals[roll] += mark
 
